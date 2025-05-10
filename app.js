@@ -10,6 +10,15 @@ const campsiteRouter = require('./routes/campsiteRouter');
 const promotionRouter = require('./routes/promotionRouter');
 const partnerRouter = require('./routes/partnerRouter');
 
+const mongoose = require('mongoose');
+
+const url = 'mongodb://localhost:27017/nucampsite';
+const connect = mongoose.connect(url, {});
+
+connect.then(() => console.log('Connected to the server'), 
+  err => console.log(err) //Easier simpler way to handle a simple function error
+);
+
 var app = express();
 
 // view engine setup
