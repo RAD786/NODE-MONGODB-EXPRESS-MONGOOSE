@@ -71,3 +71,4 @@ partnerRouter.route('/:partnerId')
 });
 
 module.exports = partnerRouter;
+//partner
