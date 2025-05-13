@@ -74,7 +74,7 @@ campsiteRouter.route('/:campsiteId')
     .catch(err => next(err));
 });
 
-campsiteRouter.route('/campsiteId/comments')
+campsiteRouter.route('/:campsiteId/comments')
 .get((req, res, next) => { 
     Campsite.findById(req.params.campsiteId)
     .then(campsite => {
@@ -138,7 +138,7 @@ campsiteRouter.route('/campsiteId/comments')
     .catch(err => next(err));
 });
 
-campsiteRouter.route('/campsiteId/comments/:commentId')
+campsiteRouter.route('/:campsiteId/comments/:commentId')
 .get((req, res, next) => { 
     Campsite.findById(req.params.campsiteId)
     .then(campsite => {
