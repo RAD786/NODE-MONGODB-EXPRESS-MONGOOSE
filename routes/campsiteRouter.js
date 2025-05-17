@@ -4,15 +4,15 @@ const campsiteRouter = express.Router();
 const authenticate = require('../authenticate');
 
 campsiteRouter.route('/')
-//chained the methods together instead of 1 by 1
-.get((req, res, next) => { //added next as a parameter for error handling
+.get((req, res, next) => {
     Campsite.find()
+    .populate('comments.author')
     .then(campsites => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(campsites); //sends json data to client and auto close the response steam so no longer need res.end()
+        res.json(campsites);
     })
-    .catch(err => next(err)); //catches errors passes of the error handling to Express automatically
+    .catch(err => next(err));
 })
 .post(authenticate.verifyUser, (req, res, next) => {
     Campsite.create(req.body) //creates a new campsite document and saves it to MongoDB server
@@ -41,6 +41,7 @@ campsiteRouter.route('/')
 campsiteRouter.route('/:campsiteId')
 .get((req, res, next) => {
     Campsite.findById(req.params.campsiteId)
+    .populate('comments.author')
     .then(campsite => {
         res.StatusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -78,6 +79,7 @@ campsiteRouter.route('/:campsiteId')
 campsiteRouter.route('/:campsiteId/comments')
 .get((req, res, next) => { 
     Campsite.findById(req.params.campsiteId)
+    .populate('comments.author')
     .then(campsite => {
         if (campsite) {
             res.statusCode = 200;
@@ -95,6 +97,7 @@ campsiteRouter.route('/:campsiteId/comments')
     Campsite.findById(req.params.campsiteId)
     .then(campsite => {
         if (campsite) {
+            req.body.author = req.user._id;
             campsite.comments.push(req.body); //only pushes to memory, not MongoDB
             campsite.save() //this saves the new comment to MongoDB
             .then(campsite => {
@@ -142,6 +145,7 @@ campsiteRouter.route('/:campsiteId/comments')
 campsiteRouter.route('/:campsiteId/comments/:commentId')
 .get((req, res, next) => { 
     Campsite.findById(req.params.campsiteId)
+    .populate('comments.author')
     .then(campsite => {
         if (campsite && campsite.comments.id(req.params.commentId)) {
             res.statusCode = 200;
